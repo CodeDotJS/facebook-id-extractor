@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>fb shit</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    </head>
+<body>
+ <div id="fb-root"></div>
+    <script>
+    window.fbAsyncInit = function() {
+        FB.init({
+        appId      :  , // add your app id here
+        cookie     : true,                                 
+        status     : true,                               
+        xfbml      : true                                  
+        });
+        window.fbLoaded();
+    };
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all/debug.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+     <div id="my-html-playground" class="container">
+        <div id="my-login-control" class="well">
+            <button id="my-login-button" class="btn btn-primary">Login with Facebook</button>
+            <p id="my-login-message"></p>
+        </div>
+        <div id="my-profile" class="row">
+            <div class="col-md-3">
+                <!-- Profile Picture -->
+                <img id="my-profile-picture" class="img-thumbnail" src="" alt="">
+            </div>
+            <div class="col-md-9">
+                <!-- Profile Information -->
+                <dl class="dl-horizontal">
+                    <dt>Name</dt>
+                    <dd id="my-profile-name"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>Gender</dt>
+                    <dd id="my-profile-gender"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>Username</dt>
+                    <dd id="my-profile-username"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>Facebook ID</dt>
+                    <dd id="my-profile-facebook-id"></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <script id="my-script-playground">
+        window.fbLoaded = function(){
+            FB.Event.subscribe('auth.login', function(response) {
+                var msg = "You're logged in.";
+                $("#my-login-message").html(msg);
+                console.log("Your login response:");
+                console.log(response);
+                fetch_my_profile();
+            });
+            $("#my-login-button").click(function(){
+                FB.login();
+            });
+            var fetch_my_profile = function () {
+                FB.api('/me', function(response) {
+                    var my_name = response.name;
+                    var my_gender = response.gender;
+                    var my_username = response.username;
+                    var my_facebook_id = response.id;
+                    $("#my-profile-name").html(my_name);
+                    $("#my-profile-gender").html(my_gender);
+                    $("#my-profile-username").html(my_username);
+                    $("#my-profile-facebook-id").html(my_facebook_id);
+                });             
+                FB.api('/me/picture?width=250', function(response) {
+                    var my_picture_url = response.data.url;
+               
+                    $("#my-profile-picture").attr('src', my_picture_url);
+                });
+            };
+        };
+    </script>
+    </body>
+</html>
